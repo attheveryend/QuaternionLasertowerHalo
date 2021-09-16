@@ -1,0 +1,794 @@
+<?xml version="1.0" standalone="yes"?>
+<?xml-stylesheet href="x2script.xsl" type="text/xsl"?>
+<!-- Generated using X-Studio -->
+<script>
+	<name>Lib.Math.HamiltonProduct</name>
+	<version>1</version>
+	<engineversion>50</engineversion>
+	<description>implements a hamilton product of two quaternians</description>
+	<arguments>
+		<argument index="1" name="q1" type="Var/Array" desc="length 4 array quaternion" />
+		<argument index="2" name="q2" type="Var/Array" desc="length 4 array quaternion" />
+	</arguments>
+	<sourcetext>
+		<line linenr="001" indent="">
+			<comment>*************************************************</comment>
+		</line>
+		<line linenr="002" indent="">
+			<comment>* SCRIPT NAME: Lib.Math.HamiltonProduct.xml</comment>
+		</line>
+		<line linenr="003" indent="">
+			<comment>* DESCRIPTION: implements a hamilton product of two quaternians</comment>
+		</line>
+		<line linenr="004" indent="">
+			<comment>* </comment>
+		</line>
+		<line linenr="005" indent="">
+			<comment>* AUTHOR: Attheveryend          DATE: 25 August 2020</comment>
+		</line>
+		<line linenr="006" indent="">
+			<comment>*************************************************</comment>
+		</line>
+		<line linenr="007" indent="">
+			<comment>*given two quaternions q1 and q1 where </comment>
+		</line>
+		<line linenr="008" indent="">
+			<comment>*    q1 = a1 + b1*i + c1*j + d1*k </comment>
+		</line>
+		<line linenr="009" indent="">
+			<comment>*    q2 = a2 + b2*i + c2*j + d2*k</comment>
+		</line>
+		<line linenr="010" indent="">
+			<comment>*the hamilton product of quaternions q1*q2 is given by</comment>
+		</line>
+		<line linenr="011" indent="">
+			<comment>*    a1*a2 - b1*b2 - c1*c2 - d1*d2</comment>
+		</line>
+		<line linenr="012" indent="">
+			<comment>*     + (a1*b2 + b1*a2 + c1*d2 - d1*c2)*i</comment>
+		</line>
+		<line linenr="013" indent="">
+			<comment>*     + (a1*c2 - b1*d2 + c1*a2 +d1*b2)*j</comment>
+		</line>
+		<line linenr="014" indent="">
+			<comment>*     + (a1*d2 + b1*c2 - c1*b2 + d1*a2)*k</comment>
+		</line>
+		<line linenr="015" indent="">
+			<comment>* </comment>
+		</line>
+		<line linenr="016" indent="">
+			<comment>* in this script we will implement a hamilton product using length 4 arrays q1 and q2 </comment>
+		</line>
+		<line linenr="017" indent="">
+			<comment>* where the elements of q1 and q2 represent the coefficients a,b,c,d, i.e. </comment>
+		</line>
+		<line linenr="018" indent="">
+			<var>$a1</var>
+			<text> </text>
+			<text>=</text>
+			<text>  </text>
+			<var>$q1</var>
+			<text>[</text>
+			<var>0</var>
+			<text>]</text>
+		</line>
+		<line linenr="019" indent="">
+			<var>$b1</var>
+			<text> </text>
+			<text>=</text>
+			<text>  </text>
+			<var>$q1</var>
+			<text>[</text>
+			<var>1</var>
+			<text>]</text>
+		</line>
+		<line linenr="020" indent="">
+			<var>$c1</var>
+			<text> </text>
+			<text>=</text>
+			<text>  </text>
+			<var>$q1</var>
+			<text>[</text>
+			<var>2</var>
+			<text>]</text>
+		</line>
+		<line linenr="021" indent="">
+			<var>$d1</var>
+			<text> </text>
+			<text>=</text>
+			<text>  </text>
+			<var>$q1</var>
+			<text>[</text>
+			<var>3</var>
+			<text>]</text>
+		</line>
+		<line linenr="022" indent="" />
+		<line linenr="023" indent="">
+			<var>$a2</var>
+			<text> </text>
+			<text>=</text>
+			<text>  </text>
+			<var>$q2</var>
+			<text>[</text>
+			<var>0</var>
+			<text>]</text>
+		</line>
+		<line linenr="024" indent="">
+			<var>$b2</var>
+			<text> </text>
+			<text>=</text>
+			<text>  </text>
+			<var>$q2</var>
+			<text>[</text>
+			<var>1</var>
+			<text>]</text>
+		</line>
+		<line linenr="025" indent="">
+			<var>$c2</var>
+			<text> </text>
+			<text>=</text>
+			<text>  </text>
+			<var>$q2</var>
+			<text>[</text>
+			<var>2</var>
+			<text>]</text>
+		</line>
+		<line linenr="026" indent="">
+			<var>$d2</var>
+			<text> </text>
+			<text>=</text>
+			<text>  </text>
+			<var>$q2</var>
+			<text>[</text>
+			<var>3</var>
+			<text>]</text>
+		</line>
+		<line linenr="027" indent="" />
+		<line linenr="028" indent="">
+			<comment>*we will initialize an array to store the product of quaternions q1 and q1 that will be returned as a result of the function</comment>
+		</line>
+		<line linenr="029" indent="">
+			<var>$hamiltonProduct</var>
+			<text> </text>
+			<text>=</text>
+			<text> </text>
+			<text>array</text>
+			<text> </text>
+			<text>alloc</text>
+			<text>:</text>
+			<text> </text>
+			<text>size</text>
+			<text>=</text>
+			<var>4</var>
+		</line>
+		<line linenr="030" indent="" />
+		<line linenr="031" indent="">
+			<comment>*now we implement the hamilton product. </comment>
+		</line>
+		<line linenr="032" indent="">
+			<var>$hamiltonProductReal</var>
+			<text> </text>
+			<text>=</text>
+			<text> </text>
+			<var>$a1</var>
+			<text>*</text>
+			<var>$a2</var>
+			<text> </text>
+			<text>-</text>
+			<text> </text>
+			<var>$b1</var>
+			<text>*</text>
+			<var>$b2</var>
+			<text> </text>
+			<text>-</text>
+			<text> </text>
+			<var>$c1</var>
+			<text>*</text>
+			<var>$c2</var>
+			<text> </text>
+			<text>-</text>
+			<text> </text>
+			<var>$d1</var>
+			<text>*</text>
+			<var>$d2</var>
+		</line>
+		<line linenr="033" indent="">
+			<var>$hamiltonProductI</var>
+			<text> </text>
+			<text>=</text>
+			<text> </text>
+			<var>$a1</var>
+			<text>*</text>
+			<var>$b2</var>
+			<text> </text>
+			<text>+</text>
+			<text> </text>
+			<var>$b1</var>
+			<text>*</text>
+			<var>$a2</var>
+			<text> </text>
+			<text>+</text>
+			<text> </text>
+			<var>$c1</var>
+			<text>*</text>
+			<var>$d2</var>
+			<text> </text>
+			<text>-</text>
+			<text> </text>
+			<var>$d1</var>
+			<text>*</text>
+			<var>$c2</var>
+		</line>
+		<line linenr="034" indent="">
+			<var>$hamiltonProductJ</var>
+			<text> </text>
+			<text>=</text>
+			<text> </text>
+			<var>$a1</var>
+			<text>*</text>
+			<var>$c2</var>
+			<text> </text>
+			<text>-</text>
+			<text> </text>
+			<var>$b1</var>
+			<text>*</text>
+			<var>$d2</var>
+			<text> </text>
+			<text>+</text>
+			<text> </text>
+			<var>$c1</var>
+			<text>*</text>
+			<var>$a2</var>
+			<text> </text>
+			<text>+</text>
+			<var>$d1</var>
+			<text>*</text>
+			<var>$b2</var>
+		</line>
+		<line linenr="035" indent="">
+			<var>$hamiltonProductK</var>
+			<text> </text>
+			<text>=</text>
+			<text> </text>
+			<var>$a1</var>
+			<text>*</text>
+			<var>$d2</var>
+			<text> </text>
+			<text>+</text>
+			<text> </text>
+			<var>$b1</var>
+			<text>*</text>
+			<var>$c2</var>
+			<text> </text>
+			<text>-</text>
+			<text> </text>
+			<var>$c1</var>
+			<text>*</text>
+			<var>$b2</var>
+			<text> </text>
+			<text>+</text>
+			<text> </text>
+			<var>$d1</var>
+			<text>*</text>
+			<var>$a2</var>
+		</line>
+		<line linenr="036" indent="" />
+		<line linenr="037" indent="">
+			<var>$hamiltonProduct</var>
+			<text>[</text>
+			<var>0</var>
+			<text>]</text>
+			<text> </text>
+			<text>=</text>
+			<text> </text>
+			<var>$hamiltonProductReal</var>
+		</line>
+		<line linenr="038" indent="">
+			<var>$hamiltonProduct</var>
+			<text>[</text>
+			<var>1</var>
+			<text>]</text>
+			<text> </text>
+			<text>=</text>
+			<text> </text>
+			<var>$hamiltonProductI</var>
+		</line>
+		<line linenr="039" indent="">
+			<var>$hamiltonProduct</var>
+			<text>[</text>
+			<var>2</var>
+			<text>]</text>
+			<text> </text>
+			<text>=</text>
+			<text> </text>
+			<var>$hamiltonProductJ</var>
+		</line>
+		<line linenr="040" indent="">
+			<var>$hamiltonProduct</var>
+			<text>[</text>
+			<var>3</var>
+			<text>]</text>
+			<text> </text>
+			<text>=</text>
+			<text> </text>
+			<var>$hamiltonProductK</var>
+		</line>
+		<line linenr="041" indent="" />
+		<line linenr="042" indent="">
+			<text>return</text>
+			<text> </text>
+			<var>$hamiltonProduct</var>
+		</line>
+	</sourcetext>
+	<codearray>
+		<sval type="array" size="10">
+			<sval type="string" val="Lib.Math.HamiltonProduct" />
+			<sval type="int" val="50" />
+			<sval type="string" val="implements a hamilton product of two quaternians" />
+			<sval type="int" val="1" />
+			<sval type="int" val="0" />
+			<sval type="array" size="15">
+				<sval type="string" val="q1" />
+				<sval type="string" val="q2" />
+				<sval type="string" val="a1" />
+				<sval type="string" val="b1" />
+				<sval type="string" val="c1" />
+				<sval type="string" val="d1" />
+				<sval type="string" val="a2" />
+				<sval type="string" val="b2" />
+				<sval type="string" val="c2" />
+				<sval type="string" val="d2" />
+				<sval type="string" val="hamiltonProduct" />
+				<sval type="string" val="hamiltonProductReal" />
+				<sval type="string" val="hamiltonProductI" />
+				<sval type="string" val="hamiltonProductJ" />
+				<sval type="string" val="hamiltonProductK" />
+			</sval>
+			<sval type="array" size="18">
+				<sval type="array" size="6">
+					<sval type="int" val="129" />
+					<sval type="int" val="2" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="0" />
+					<sval type="int" val="4" />
+					<sval type="int" val="0" />
+				</sval>
+				<sval type="array" size="6">
+					<sval type="int" val="129" />
+					<sval type="int" val="3" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="0" />
+					<sval type="int" val="4" />
+					<sval type="int" val="1" />
+				</sval>
+				<sval type="array" size="6">
+					<sval type="int" val="129" />
+					<sval type="int" val="4" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="0" />
+					<sval type="int" val="4" />
+					<sval type="int" val="2" />
+				</sval>
+				<sval type="array" size="6">
+					<sval type="int" val="129" />
+					<sval type="int" val="5" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="0" />
+					<sval type="int" val="4" />
+					<sval type="int" val="3" />
+				</sval>
+				<sval type="array" size="6">
+					<sval type="int" val="129" />
+					<sval type="int" val="6" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="1" />
+					<sval type="int" val="4" />
+					<sval type="int" val="0" />
+				</sval>
+				<sval type="array" size="6">
+					<sval type="int" val="129" />
+					<sval type="int" val="7" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="1" />
+					<sval type="int" val="4" />
+					<sval type="int" val="1" />
+				</sval>
+				<sval type="array" size="6">
+					<sval type="int" val="129" />
+					<sval type="int" val="8" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="1" />
+					<sval type="int" val="4" />
+					<sval type="int" val="2" />
+				</sval>
+				<sval type="array" size="6">
+					<sval type="int" val="129" />
+					<sval type="int" val="9" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="1" />
+					<sval type="int" val="4" />
+					<sval type="int" val="3" />
+				</sval>
+				<sval type="array" size="4">
+					<sval type="int" val="128" />
+					<sval type="int" val="10" />
+					<sval type="int" val="4" />
+					<sval type="int" val="4" />
+				</sval>
+				<sval type="array" size="49">
+					<sval type="int" val="104" />
+					<sval type="int" val="11" />
+					<sval type="int" val="15" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="2" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="6" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="3" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="7" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="12" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="4" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="8" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="12" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="5" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="9" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="12" />
+					<sval type="int" val="15" />
+					<sval type="int" val="-1" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-2" />
+					<sval type="int" val="12" />
+					<sval type="int" val="-4" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-5" />
+					<sval type="int" val="12" />
+					<sval type="int" val="-8" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-9" />
+					<sval type="int" val="12" />
+					<sval type="int" val="-12" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-13" />
+				</sval>
+				<sval type="array" size="49">
+					<sval type="int" val="104" />
+					<sval type="int" val="12" />
+					<sval type="int" val="15" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="2" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="7" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="3" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="6" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="11" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="4" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="9" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="11" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="5" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="8" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="12" />
+					<sval type="int" val="15" />
+					<sval type="int" val="-1" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-2" />
+					<sval type="int" val="11" />
+					<sval type="int" val="-4" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-5" />
+					<sval type="int" val="11" />
+					<sval type="int" val="-8" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-9" />
+					<sval type="int" val="12" />
+					<sval type="int" val="-12" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-13" />
+				</sval>
+				<sval type="array" size="49">
+					<sval type="int" val="104" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="2" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="8" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="3" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="9" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="12" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="4" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="6" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="11" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="5" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="7" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="11" />
+					<sval type="int" val="15" />
+					<sval type="int" val="-1" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-2" />
+					<sval type="int" val="12" />
+					<sval type="int" val="-4" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-5" />
+					<sval type="int" val="11" />
+					<sval type="int" val="-8" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-9" />
+					<sval type="int" val="11" />
+					<sval type="int" val="-12" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-13" />
+				</sval>
+				<sval type="array" size="49">
+					<sval type="int" val="104" />
+					<sval type="int" val="14" />
+					<sval type="int" val="15" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="2" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="9" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="3" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="8" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="11" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="4" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="7" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="12" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="5" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="6" />
+					<sval type="int" val="15" />
+					<sval type="int" val="13" />
+					<sval type="int" val="15" />
+					<sval type="int" val="11" />
+					<sval type="int" val="15" />
+					<sval type="int" val="-1" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-2" />
+					<sval type="int" val="11" />
+					<sval type="int" val="-4" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-5" />
+					<sval type="int" val="12" />
+					<sval type="int" val="-8" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-9" />
+					<sval type="int" val="11" />
+					<sval type="int" val="-12" />
+					<sval type="int" val="13" />
+					<sval type="int" val="-13" />
+				</sval>
+				<sval type="array" size="7">
+					<sval type="int" val="130" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="10" />
+					<sval type="int" val="4" />
+					<sval type="int" val="0" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="11" />
+				</sval>
+				<sval type="array" size="7">
+					<sval type="int" val="130" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="10" />
+					<sval type="int" val="4" />
+					<sval type="int" val="1" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="12" />
+				</sval>
+				<sval type="array" size="7">
+					<sval type="int" val="130" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="10" />
+					<sval type="int" val="4" />
+					<sval type="int" val="2" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="13" />
+				</sval>
+				<sval type="array" size="7">
+					<sval type="int" val="130" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="10" />
+					<sval type="int" val="4" />
+					<sval type="int" val="3" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="14" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="103" />
+					<sval type="int" val="131074" />
+					<sval type="int" val="10" />
+				</sval>
+			</sval>
+			<sval type="array" size="2">
+				<sval type="array" size="2">
+					<sval type="int" val="45" />
+					<sval type="string" val="length 4 array quaternion" />
+				</sval>
+				<sval type="array" size="2">
+					<sval type="int" val="45" />
+					<sval type="string" val="length 4 array quaternion" />
+				</sval>
+			</sval>
+			<sval type="array" size="24">
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="************************************************" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="SCRIPT NAME: Lib.Math.HamiltonProduct.xml" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="DESCRIPTION: implements a hamilton product of two quaternians" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="AUTHOR: Attheveryend          DATE: 25 August 2020" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="************************************************" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="given two quaternions q1 and q1 where " />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="   q1 = a1 + b1*i + c1*j + d1*k " />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="   q2 = a2 + b2*i + c2*j + d2*k" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="the hamilton product of quaternions q1*q2 is given by" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="   a1*a2 - b1*b2 - c1*c2 - d1*d2" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="    + (a1*b2 + b1*a2 + c1*d2 - d1*c2)*i" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="    + (a1*c2 - b1*d2 + c1*a2 +d1*b2)*j" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="    + (a1*d2 + b1*c2 - c1*b2 + d1*a2)*k" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="in this script we will implement a hamilton product using length 4 arrays q1 and q2 " />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="0" />
+					<sval type="int" val="1" />
+					<sval type="string" val="where the elements of q1 and q2 represent the coefficients a,b,c,d, i.e. " />
+				</sval>
+				<sval type="array" size="2">
+					<sval type="int" val="4" />
+					<sval type="int" val="2" />
+				</sval>
+				<sval type="array" size="2">
+					<sval type="int" val="8" />
+					<sval type="int" val="2" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="8" />
+					<sval type="int" val="1" />
+					<sval type="string" val="we will initialize an array to store the product of quaternions q1 and q1 that will be returned as a result of the function" />
+				</sval>
+				<sval type="array" size="2">
+					<sval type="int" val="9" />
+					<sval type="int" val="2" />
+				</sval>
+				<sval type="array" size="3">
+					<sval type="int" val="9" />
+					<sval type="int" val="1" />
+					<sval type="string" val="now we implement the hamilton product. " />
+				</sval>
+				<sval type="array" size="2">
+					<sval type="int" val="13" />
+					<sval type="int" val="2" />
+				</sval>
+				<sval type="array" size="2">
+					<sval type="int" val="17" />
+					<sval type="int" val="2" />
+				</sval>
+			</sval>
+			<sval type="int" val="0" />
+		</sval>
+	</codearray>
+</script>
